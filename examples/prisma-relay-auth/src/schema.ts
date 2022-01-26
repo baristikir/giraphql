@@ -16,13 +16,27 @@ builder.prismaNode('User', {
 });
 
 builder.prismaNode('Post', {
-  findUnique: (id) => ({ id: Number.parseInt(id, 10) }),
   id: { resolve: (post) => post.id },
+  findUnique: (id) => ({ id: Number.parseInt(id, 10) }),
+  grantScopes: (parent, context) => {
+    console.log({ parent });
+    console.log({ context });
+
+    if (parent.authorId === context.user.id) {
+      return ['readPrivateNotes'];
+    }
+    return [];
+  },
   fields: (t) => ({
     title: t.exposeString('title'),
     content: t.exposeString('content'),
     author: t.relation('author'),
     comments: t.relation('comments'),
+    privateNotes: t.exposeString('privateNotes', {
+      authScopes: {
+        $granted: 'readPrivateNotes',
+      },
+    }),
   }),
 });
 

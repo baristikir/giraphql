@@ -5,6 +5,7 @@ const PORT = 3000;
 
 export const server = new ApolloServer({
   schema,
+  context: () => ({ user: { id: 1 } }),
 });
 
 void server.listen(PORT, (error: unknown) => {

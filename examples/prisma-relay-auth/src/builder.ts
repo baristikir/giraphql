@@ -7,8 +7,7 @@ import { db } from './db';
 
 interface UserContext {
   user: {
-    pk: number;
-    name: string;
+    id: number;
   };
 }
 
